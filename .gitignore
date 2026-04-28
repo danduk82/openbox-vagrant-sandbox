@@ -1,6 +1,7 @@
 # Vagrant state and artifacts
 .vagrant/
 *.box
+Vagrantfile.local
 
 # Logs and temporary files
 *.log

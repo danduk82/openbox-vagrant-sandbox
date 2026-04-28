@@ -6,6 +6,8 @@ The only host path mounted in the VM is `shared/` from this directory, exposed a
 
 Base box: `bento/ubuntu-24.04` (VirtualBox provider).
 
+For additional host project mounts, use an untracked `Vagrantfile.local` with explicit allowlisted paths.
+
 ## Requirements
 
 - Vagrant
@@ -42,6 +44,36 @@ vagrant up
 ```
 
 This will auto-create a local `shared/` directory (if missing) and mount it into the VM.
+
+## Additional project mounts (recommended pattern)
+
+Keep personal mounts in `Vagrantfile.local` (not tracked by git).
+
+```bash
+cp Vagrantfile.local.example Vagrantfile.local
+```
+
+Edit `Vagrantfile.local` and add only specific project paths. Examples:
+
+```ruby
+# Read-only (default, safer)
+project_mount.call("~/code/project-a", "/projects/project-a")
+
+# Writable (only when needed)
+project_mount.call("~/code/project-b", "/projects/project-b", writable: true)
+```
+
+Then reload mounts:
+
+```bash
+vagrant reload
+```
+
+Safety defaults in this repository:
+
+- Only explicit paths you define are mounted.
+- Mounts are read-only unless `writable: true` is set.
+- Broad/sensitive host paths are refused (`/`, `/home`, and your home directory root).
 
 SSH into the VM:
 

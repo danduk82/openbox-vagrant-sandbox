@@ -1,0 +1,8 @@
+# Copy this file to Vagrantfile.local and customize for your machine.
+# Vagrantfile.local is gitignored so you can keep personal paths private.
+
+# Read-only mount (recommended default)
+# project_mount.call("~/code/my-readonly-project", "/projects/my-readonly-project")
+
+# Writable mount (use only when needed)
+# project_mount.call("~/code/my-active-project", "/projects/my-active-project", writable: true)
