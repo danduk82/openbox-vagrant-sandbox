@@ -47,6 +47,58 @@ vagrant up
 
 This will auto-create a local `shared/` directory (if missing) and mount it into the VM.
 
+## Using git worktrees for multiple projects
+
+If you want one VM per project (recommended), use git worktrees instead of cloning this repo many times.
+
+Example with fake project names and paths:
+
+```bash
+# from this repository root
+git switch master
+git pull
+
+# create two worktrees with dedicated branches
+git worktree add ../openbox-sandbox-api -b vm/api master
+git worktree add ../openbox-sandbox-web -b vm/web master
+```
+
+Configure mounts in each worktree:
+
+```bash
+# API worktree
+cd ../openbox-sandbox-api
+cat > Vagrantfile.local <<'EOF'
+project_mount.call("~/projects/acme-api", "/projects/acme-api", writable: true)
+EOF
+
+# Web worktree
+cd ../openbox-sandbox-web
+cat > Vagrantfile.local <<'EOF'
+project_mount.call("~/projects/starlight-web", "/projects/starlight-web", writable: true)
+EOF
+```
+
+Start each VM independently:
+
+```bash
+cd ../openbox-sandbox-api && vagrant up
+cd ../openbox-sandbox-web && vagrant up
+```
+
+Notes:
+
+- Each worktree has independent `.vagrant/` state and SSH key.
+- VM names are auto-generated per worktree, so VirtualBox names do not collide.
+- Vagrant auto-resolves SSH port collisions when multiple VMs run.
+
+Sync worktrees when `master` changes:
+
+```bash
+cd ../openbox-sandbox-api && git fetch origin && git rebase origin/master
+cd ../openbox-sandbox-web && git fetch origin && git rebase origin/master
+```
+
 ## Additional project mounts (recommended pattern)
 
 Keep personal mounts in `Vagrantfile.local` (not tracked by git).
