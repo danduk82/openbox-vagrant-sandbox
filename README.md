@@ -80,11 +80,30 @@ VM_CPUS=4 VM_MEMORY=8192 vagrant up
 vagrant provision
 ```
 
+## Install OpenCode inside the VM
+
+OpenCode is not preinstalled by the provisioner. Install it once per VM:
+
+```bash
+vagrant ssh
+curl -fsSL https://opencode.ai/install | bash
+echo 'export PATH="$HOME/.opencode/bin:$PATH"' >> ~/.profile
+source ~/.profile
+opencode --version
+```
+
+If you run non-interactive commands with `vagrant ssh -c`, use the full binary path:
+
+```bash
+vagrant ssh -c "~/.opencode/bin/opencode --version"
+```
+
 ## Runtime checks inside VM
 
 ```bash
 docker --version
 node --version
 bun --version
+~/.opencode/bin/opencode --version
 sudo ufw status verbose
 ```
