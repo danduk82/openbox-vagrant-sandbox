@@ -1,0 +1,5 @@
+# Ignore all files under shared by default
+*
+
+# Keep this ignore file versioned
+!.gitignore
