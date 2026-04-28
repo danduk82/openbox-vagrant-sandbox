@@ -6,6 +6,8 @@ The only host path mounted in the VM is `shared/` from this directory, exposed a
 
 Base box: `bento/ubuntu-24.04` (VirtualBox provider).
 
+VirtualBox VM name/hostname are auto-derived from the folder name and path, so multiple worktrees do not collide.
+
 For additional host project mounts, use an untracked `Vagrantfile.local` with explicit allowlisted paths.
 
 ## Requirements

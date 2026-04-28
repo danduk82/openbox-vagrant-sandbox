@@ -1,7 +1,15 @@
+require "digest"
+
 Vagrant.configure("2") do |config|
   host_uid = Process.uid
   host_gid = Process.gid
   host_home = File.expand_path("~")
+  instance_dir = File.expand_path(__dir__)
+  instance_slug = File.basename(instance_dir).downcase.gsub(/[^a-z0-9-]/, "-")
+  instance_slug = "sandbox" if instance_slug.empty?
+  instance_hash = Digest::SHA1.hexdigest(instance_dir)[0, 8]
+  vm_name = ENV.fetch("VM_NAME", "opencode-#{instance_slug}-#{instance_hash}")
+  vm_hostname = ENV.fetch("VM_HOSTNAME", vm_name)[0, 63]
 
   project_mount = lambda do |host_path, guest_path, writable: false|
     expanded_host = File.expand_path(host_path.to_s)
@@ -19,7 +27,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.box = "bento/ubuntu-24.04"
-  config.vm.hostname = "opencode-sandbox"
+  config.vm.hostname = vm_hostname
   config.vm.boot_timeout = 600
 
   # Disable default mapping of current folder to /vagrant.
@@ -27,7 +35,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
-    vb.name = "opencode-sandbox"
+    vb.name = vm_name
     vb.cpus = ENV.fetch("VM_CPUS", "2")
     vb.memory = ENV.fetch("VM_MEMORY", "4096")
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
