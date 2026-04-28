@@ -46,11 +46,6 @@ Vagrant.configure("2") do |config|
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   end
 
-  config.vm.synced_folder "shared", "/workspace",
-                          type: "virtualbox",
-                          create: true,
-                          mount_options: ["uid=#{host_uid}", "gid=#{host_gid}", "dmode=775", "fmode=664"]
-
   config.vm.provision "shell", path: "provision/bootstrap.sh", privileged: true
   config.vm.provision "shell", path: "provision/hardening.sh", privileged: true
   config.vm.provision "shell",

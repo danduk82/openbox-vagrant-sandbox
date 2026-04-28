@@ -2,8 +2,6 @@
 
 This folder contains a Vagrant setup for a headless Ubuntu 24.04 VM suitable for running OpenCode agents in a sandbox environment.
 
-The only host path mounted in the VM is `shared/` from this directory, exposed as `/workspace` inside the guest.
-
 Base box: `bento/ubuntu-24.04` (VirtualBox provider).
 
 VirtualBox VM name/hostname are auto-derived from the folder name and path, so multiple worktrees do not collide.
@@ -45,7 +43,7 @@ From this directory:
 vagrant up
 ```
 
-This will auto-create a local `shared/` directory (if missing) and mount it into the VM.
+By default, no host project folders are mounted. Add explicit mounts in `Vagrantfile.local`.
 
 ## Using git worktrees for multiple projects
 
@@ -133,12 +131,6 @@ SSH into the VM:
 
 ```bash
 vagrant ssh
-```
-
-Inside the VM, your host folder is available at:
-
-```bash
-/workspace
 ```
 
 ## Host UID/GID mapping
