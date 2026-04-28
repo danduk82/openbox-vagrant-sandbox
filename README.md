@@ -1,4 +1,4 @@
-# Ubuntu 24.04 Headless Vagrant Box (VirtualBox)
+# OpenCode Sandbox VMs with Vagrant Worktrees (Ubuntu 24.04)
 
 This folder contains a Vagrant setup for a headless Ubuntu 24.04 VM suitable for running OpenCode agents in a sandbox environment.
 
