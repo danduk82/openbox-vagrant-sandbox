@@ -160,6 +160,19 @@ Set environment variables before `vagrant up`:
 VM_CPUS=4 VM_MEMORY=8192 vagrant up
 ```
 
+For per-worktree sizing, set values in `Vagrantfile.local`:
+
+```ruby
+vm_cpus = "4"
+vm_memory = "8192"
+```
+
+Then apply the new resources:
+
+```bash
+vagrant reload
+```
+
 ## Reprovision
 
 ```bash

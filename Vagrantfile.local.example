@@ -1,6 +1,10 @@
 # Copy this file to Vagrantfile.local and customize for your machine.
 # Vagrantfile.local is gitignored so you can keep personal paths private.
 
+# Optional per-environment VM sizing
+# vm_cpus = "4"
+# vm_memory = "8192"
+
 # Read-only mount (recommended default)
 # project_mount.call("~/code/my-readonly-project", "/projects/my-readonly-project")
 

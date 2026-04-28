@@ -10,6 +10,8 @@ Vagrant.configure("2") do |config|
   instance_hash = Digest::SHA1.hexdigest(instance_dir)[0, 8]
   vm_name = ENV.fetch("VM_NAME", "opencode-#{instance_slug}-#{instance_hash}")
   vm_hostname = ENV.fetch("VM_HOSTNAME", vm_name)[0, 63]
+  vm_cpus = ENV.fetch("VM_CPUS", "2")
+  vm_memory = ENV.fetch("VM_MEMORY", "4096")
 
   project_mount = lambda do |host_path, guest_path, writable: false|
     expanded_host = File.expand_path(host_path.to_s)
@@ -26,6 +28,9 @@ Vagrant.configure("2") do |config|
                             mount_options: mount_options
   end
 
+  local_vagrantfile = File.join(__dir__, "Vagrantfile.local")
+  eval(File.read(local_vagrantfile), binding, local_vagrantfile) if File.file?(local_vagrantfile)
+
   config.vm.box = "bento/ubuntu-24.04"
   config.vm.hostname = vm_hostname
   config.vm.boot_timeout = 600
@@ -36,8 +41,8 @@ Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
     vb.name = vm_name
-    vb.cpus = ENV.fetch("VM_CPUS", "2")
-    vb.memory = ENV.fetch("VM_MEMORY", "4096")
+    vb.cpus = vm_cpus
+    vb.memory = vm_memory
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   end
 
@@ -45,9 +50,6 @@ Vagrant.configure("2") do |config|
                           type: "virtualbox",
                           create: true,
                           mount_options: ["uid=#{host_uid}", "gid=#{host_gid}", "dmode=775", "fmode=664"]
-
-  local_vagrantfile = File.join(__dir__, "Vagrantfile.local")
-  eval(File.read(local_vagrantfile), binding, local_vagrantfile) if File.file?(local_vagrantfile)
 
   config.vm.provision "shell", path: "provision/bootstrap.sh", privileged: true
   config.vm.provision "shell", path: "provision/hardening.sh", privileged: true
