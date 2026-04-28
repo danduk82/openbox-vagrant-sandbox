@@ -13,6 +13,57 @@ For additional host project mounts, use an untracked `Vagrantfile.local` with ex
 - Vagrant
 - VirtualBox
 
+## VirtualBox setup and checks
+
+Install VirtualBox from the official package for your OS, then verify it is available:
+
+```bash
+VBoxManage --version
+vagrant --version
+```
+
+Recommended compatibility:
+
+- VirtualBox 7.x
+- Vagrant 2.4.x or newer
+
+Quick provider check from this repository:
+
+```bash
+vagrant validate
+vagrant up --provider=virtualbox
+```
+
+If VirtualBox is installed but Vagrant reports the provider is unusable, the issue is usually a Vagrant/VirtualBox version mismatch.
+
+## Vagrant setup and checks
+
+Install Vagrant, then verify the CLI is available:
+
+```bash
+vagrant --version
+```
+
+Recommended version:
+
+- Vagrant 2.4.x or newer
+
+Optional plugin check (if you use Guest Additions automation):
+
+```bash
+vagrant plugin list
+```
+
+Minimal functional test from this repository:
+
+```bash
+vagrant validate
+vagrant up --provider=virtualbox
+vagrant status
+```
+
+If `vagrant up` fails early with provider compatibility errors, upgrade Vagrant first and retry.
+
 ## What is installed automatically
 
 - Core build tools: `build-essential`, `make`
