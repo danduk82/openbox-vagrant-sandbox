@@ -13,6 +13,12 @@ For additional host project mounts, use an untracked `Vagrantfile.local` with ex
 - Vagrant
 - VirtualBox
 
+```bash
+sudo apt-get install vagrant virtualbox-dkms linux-headers-generic
+```
+
+I use an AI to fix the dkms key to be installed as I understand in the bios.
+
 ## VirtualBox setup and checks
 
 Install VirtualBox from the official package for your OS, then verify it is available:
@@ -31,7 +37,7 @@ Quick provider check from this repository:
 
 ```bash
 vagrant validate
-vagrant up --provider=virtualbox
+vagrant up --provider=virtualbox -- -X
 ```
 
 If VirtualBox is installed but Vagrant reports the provider is unusable, the issue is usually a Vagrant/VirtualBox version mismatch.
@@ -249,3 +255,10 @@ bun --version
 ~/.opencode/bin/opencode --version
 sudo ufw status verbose
 ```
+
+## Security considerations
+
+- Use a PAT
+- Has a readonly access to kubernetes
+- Has a readonly access to the database especially the pg stats statements
+- Has a way to access to Grafana, Loki, Prometheus and AlertManager by a way that can't be used to to anything else
