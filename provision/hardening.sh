@@ -17,6 +17,18 @@ echo \
 apt-get update
 apt-get install -y --no-install-recommends nodejs
 
+
+# NVM: https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/
+echo '' >> /home/vagrant/.bashrc
+echo '# init node/npm' >> /home/vagrant/.bashrc
+echo 'export NVM_DIR="$HOME/.nvm"' >> /home/vagrant/.bashrc
+echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm' >> /home/vagrant/.bashrc
+echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion' >> /home/vagrant/.bashrc
+echo 'export PATH="$NVM_BIN:$PATH"' >> /home/vagrant/.bashrc
+echo 'export PATH=${HOME}/.npm_local/bin/:${PATH}' >> /home/vagrant/.bashrc
+echo 'source <(npm completion)' >> /home/vagrant/.bashrc
+
+
 if ! command -v bun >/dev/null 2>&1; then
   su - vagrant -c 'curl -fsSL https://bun.sh/install | bash'
 fi
@@ -61,5 +73,7 @@ fi
 
 apt-get clean
 rm -rf /var/lib/apt/lists/*
+
+npm install -g opencode-ai
 
 echo "Hardening and runtime tools installation complete."
