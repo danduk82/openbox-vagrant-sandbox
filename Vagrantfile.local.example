@@ -5,6 +5,13 @@
 # vm_cpus = "4"
 # vm_memory = "8192"
 
+# Optional provisioning sections.
+# Default if omitted: ["base", "python"]
+# Available: base, python, docker, node, k8s, gh, security, opencode
+#
+# Example: enable docker + node + gh (cleanup is always run automatically)
+# provision_sections = ["base", "python", "docker", "node", "gh"]
+
 # Read-only mount (recommended default)
 # project_mount.call("~/code/my-readonly-project", "/projects/my-readonly-project")
 

@@ -13,6 +13,7 @@ Vagrant.configure("2") do |config|
   vm_hostname = ENV.fetch("VM_HOSTNAME", vm_name)[0, 63]
   vm_cpus = ENV.fetch("VM_CPUS", "2")
   vm_memory = ENV.fetch("VM_MEMORY", "4096")
+  provision_sections = ["base", "python"]
   file_mounts = []
   mounted_file_parent_dirs = {}
 
@@ -90,8 +91,12 @@ Vagrant.configure("2") do |config|
                         run: "always"
   end
 
-  config.vm.provision "shell", path: "provision/bootstrap.sh", privileged: true
-  config.vm.provision "shell", path: "provision/hardening.sh", privileged: true
+  config.vm.provision "shell",
+                      path: "provision/bootstrap.sh",
+                      privileged: true,
+                      env: {
+                        "PROVISION_SECTIONS" => provision_sections.join(",")
+                      }
   config.vm.provision "shell",
                       path: "provision/user_mapping.sh",
                       privileged: true,
