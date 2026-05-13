@@ -14,6 +14,7 @@ Vagrant.configure("2") do |config|
   vm_cpus = ENV.fetch("VM_CPUS", "2")
   vm_memory = ENV.fetch("VM_MEMORY", "4096")
   provision_sections = ["base", "python"]
+  allowed_sections = ["base", "python", "docker", "node", "k8s", "gh", "security", "opencode"]
   file_mounts = []
   mounted_file_parent_dirs = {}
 
@@ -55,6 +56,13 @@ Vagrant.configure("2") do |config|
   local_vagrantfile = File.join(__dir__, "Vagrantfile.local")
   eval(File.read(local_vagrantfile), binding, local_vagrantfile) if File.file?(local_vagrantfile)
 
+  normalized_sections = Array(provision_sections).map { |section| section.to_s.strip.downcase }.reject(&:empty?).uniq
+  normalized_sections = ["base", "python"] if normalized_sections.empty?
+  unknown_sections = normalized_sections - allowed_sections
+  unless unknown_sections.empty?
+    raise "Unknown provision section(s): #{unknown_sections.join(", ")}. Allowed values: #{allowed_sections.join(", ")}."
+  end
+
   config.vm.box = "bento/ubuntu-24.04"
   config.vm.hostname = vm_hostname
   config.vm.boot_timeout = 600
@@ -91,11 +99,14 @@ Vagrant.configure("2") do |config|
                         run: "always"
   end
 
+  config.vm.synced_folder File.expand_path("provision", __dir__), "/opt/provision",
+                          type: "virtualbox",
+                          mount_options: ["ro", "dmode=755", "fmode=644"]
   config.vm.provision "shell",
-                      path: "provision/bootstrap.sh",
+                      inline: "set -eu; test -f /opt/provision/bootstrap.sh || (echo '/opt/provision/bootstrap.sh not found' >&2; ls -la /opt >&2 || true; exit 1); bash /opt/provision/bootstrap.sh",
                       privileged: true,
                       env: {
-                        "PROVISION_SECTIONS" => provision_sections.join(",")
+                        "PROVISION_SECTIONS" => normalized_sections.join(",")
                       }
   config.vm.provision "shell",
                       path: "provision/user_mapping.sh",
