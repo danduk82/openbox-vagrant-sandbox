@@ -249,3 +249,15 @@ bun --version
 ~/.opencode/bin/opencode --version
 sudo ufw status verbose
 ```
+
+## Possible Issues:
+
+On running `vagrant up` the following error appears:
+```
+default: Destroying VM and associated drives...
+/home/<user>/.vagrant.d/gems/3.3.8/gems/vagrant-vbguest-0.32.0/lib/vagrant-vbguest/hosts/virtualbox.rb:84:in `block in guess_local_iso': undefined method `exists?' for class File (NoMethodError)
+
+            path && File.exists?(path)
+``
+
+The line can be fixed directly in the `virtualbox.rb`. For more details on the error see: https://github.com/hashicorp/vagrant/issues/13404#issuecomment-2490741205
